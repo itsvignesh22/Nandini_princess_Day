@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5d8f2">
+  <title>Hey You! - Princess Day</title>
+  <style>
+    :root {
+      --purple: #8544ad;
+      --outline: #b88acb;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; min-height: 100%; }
+    body {
+      min-height: 100svh;
+      overflow: hidden;
+      background: linear-gradient(125deg, #f8d8ec 0%, #eedcff 52%, #f7cce8 100%);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+    .page {
+      position: relative;
+      isolation: isolate;
+      width: 100%;
+      height: 100svh;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Same soft floating emoji hearts and gentle rain as Page 1. */
+    .rain-layer, .heart-layer {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+    }
+    .rain-layer { z-index: 0; }
+    .heart-layer { z-index: 1; }
+    .floating-heart {
+      position: absolute; bottom: -45px; left: var(--left);
+      font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+      font-size: var(--size); line-height: 1; opacity: 0;
+      filter: drop-shadow(0 2px 5px rgba(165,93,190,.15));
+      animation: floatUp var(--duration) linear var(--delay) infinite,
+                 softBlink 2.8s ease-in-out var(--blink-delay) infinite;
+      will-change: transform, opacity;
+    }
+    @keyframes floatUp {
+      0% { transform: translate3d(0,0,0) rotate(-8deg) scale(.88); }
+      25% { transform: translate3d(13px,-25vh,0) rotate(5deg) scale(1); }
+      50% { transform: translate3d(-10px,-50vh,0) rotate(-5deg) scale(.94); }
+      75% { transform: translate3d(12px,-75vh,0) rotate(7deg) scale(1.04); }
+      100% { transform: translate3d(-5px,-112vh,0) rotate(-4deg) scale(.9); }
+    }
+    @keyframes softBlink {
+      0%,100% { opacity: .08; }
+      35%,65% { opacity: .82; }
+      50% { opacity: .98; }
+    }
+    .raindrop {
+      position: absolute; top: -30px; left: var(--left);
+      width: 1px; height: var(--length); border-radius: 99px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,.8));
+      opacity: 0; transform: rotate(9deg);
+      animation: gentleRain var(--duration) linear var(--delay) infinite;
+    }
+    @keyframes gentleRain {
+      0% { transform: translate3d(0,-25px,0) rotate(9deg); opacity: 0; }
+      12% { opacity: .42; }
+      82% { opacity: .32; }
+      100% { transform: translate3d(-15px,110svh,0) rotate(9deg); opacity: 0; }
+    }
+
+    .top-heart {
+      position: absolute; z-index: 2; top: 5.5%; left: 50%;
+      transform: translateX(-50%);
+      font: 26px/1 "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+      animation: topBeat 2.1s ease-in-out infinite;
+    }
+    @keyframes topBeat {
+      0%,100% { transform: translateX(-50%) scale(1); opacity: .88; }
+      45% { transform: translateX(-50%) scale(1.12); opacity: 1; }
+    }
+
+    /* Coordinates are proportional to the screenshot's webpage area,
+       excluding Chrome's top and bottom browser bars. */
+    .envelope-scene {
+      position: absolute;
+      z-index: 2;
+      left: 50%; top: 18.8%;
+      transform: translateX(-50%);
+      width: 86vw;
+      height: 42.5%;
+    }
+    .letter {
+      position: absolute; z-index: 1;
+      left: 4.5%; top: 0;
+      width: 91%; height: 76%;
+      padding: 28px 12px 12px;
+      border-radius: 17px 17px 5px 5px;
+      background: #fff;
+      box-shadow: 0 5px 16px rgba(148,95,166,.08);
+      text-align: center; color: var(--purple);
+      animation: letterRise 1.35s cubic-bezier(.2,.78,.25,1) both;
+    }
+    @keyframes letterRise {
+      0% { transform: translateY(17%); }
+      65% { transform: translateY(-2.5%); }
+      82% { transform: translateY(.8%); }
+      100% { transform: translateY(0); }
+    }
+    .letter h1 {
+      margin: 0 0 7px;
+      font-family: "Brush Script MT", "Segoe Script", cursive;
+      font-size: clamp(28px, 7.7vw, 34px);
+      line-height: 1.2; font-weight: 500; font-style: italic;
+      color: #8142a9;
+    }
+    .letter p {
+      margin: 0 auto 7px; max-width: 96%;
+      font-family: "Brush Script MT", "Segoe Script", cursive;
+      font-style: italic; font-size: clamp(19px, 5.2vw, 23px);
+      line-height: 1.55; color: #8950ad;
+    }
+
+    /* Envelope pocket: V-shaped top, pastel pink fill, purple outline. */
+    .envelope-pocket {
+      position: absolute; z-index: 3;
+      left: 0; bottom: 0; width: 100%; height: 57%;
+      background: linear-gradient(135deg, #f8d8f0 0%, #edc9ed 100%);
+      clip-path: polygon(0 0, 50% 43%, 100% 0, 100% 100%, 0 100%);
+      border-radius: 0 0 20px 20px;
+      filter: drop-shadow(0 4px 0 rgba(167,117,184,.08));
+    }
+    .envelope-outline {
+      position: absolute; z-index: 4;
+      left: 0; bottom: 0; width: 100%; height: 57%;
+      border-left: 2.5px solid var(--outline);
+      border-right: 2.5px solid var(--outline);
+      border-bottom: 2.5px solid var(--outline);
+      border-radius: 0 0 21px 21px;
+      pointer-events: none;
+    }
+    .stamp {
+      position: absolute; z-index: 5;
+      left: 6%; bottom: 13%;
+      padding: 8px 13px;
+      border: 2px dashed #b06bc7; border-radius: 10px;
+      color: #8745ad;
+      font: 700 clamp(13px, 3.6vw, 16px)/1.2 Arial, sans-serif;
+      letter-spacing: 1px; transform: rotate(-7deg);
+      background: rgba(255,255,255,.12);
+    }
+    .envelope-heart {
+      position: absolute; z-index: 6;
+      left: 50%; bottom: 20%;
+      transform: translateX(-50%);
+      color: #f05aa8;
+      font: 39px/1 "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+      -webkit-text-stroke: .5px #fff;
+      filter: drop-shadow(0 1px 1px rgba(177,87,157,.15));
+      animation: heartBeat 1.8s ease-in-out infinite;
+    }
+    @keyframes heartBeat {
+      0%,100% { transform: translateX(-50%) scale(1); }
+      15% { transform: translateX(-50%) scale(1.1); }
+      30% { transform: translateX(-50%) scale(1); }
+      45% { transform: translateX(-50%) scale(1.06); }
+    }
+
+    /* Small reserved panda spot matching the tiny panda in the reference. */
+    .panda-slot {
+      position: absolute; z-index: 7;
+      right: -1%; bottom: 0;
+      width: 27px; height: 40px;
+      display: grid; place-items: center;
+      pointer-events: none;
+    }
+    .panda-slot img {
+      display: block; width: 100%; height: 100%; object-fit: contain;
+    }
+
+    .tap-text {
+      position: absolute; z-index: 2;
+      top: 71.5%; left: 0; width: 100%;
+      margin: 0; color: #9360b0;
+      font: 500 clamp(13px, 3.5vw, 17px)/1.4 Arial, sans-serif;
+      letter-spacing: .27em; text-align: center; white-space: nowrap;
+    }
+    .open-bar {
+      position: absolute; z-index: 2;
+      left: 50%; bottom: 2.3%;
+      transform: translateX(-50%);
+      width: 71vw; height: 12%;
+      border-radius: 100px;
+      background: rgba(255,255,255,.9);
+      box-shadow: 0 9px 26px rgba(179,105,187,.15);
+      display: flex; align-items: center; justify-content: flex-end;
+      padding: 7px;
+    }
+    .dots {
+      display: flex; align-items: center; gap: 7px;
+      margin: 0 auto; padding-left: 17%;
+    }
+    .dots span {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #f3d4e8;
+    }
+    .dots span:first-child {
+      width: 11px; height: 11px;
+      background: #d86bc0;
+      box-shadow: 0 0 0 2px rgba(216,107,192,.1);
+    }
+    .open-button {
+      width: 82px; height: 82px; flex: 0 0 82px;
+      border: 0; border-radius: 50%;
+      background: linear-gradient(140deg, #f07bbd, #bd63d0);
+      color: #fff; box-shadow: 0 6px 15px rgba(198,88,178,.2);
+      font: 600 19px/1.2 Arial, sans-serif;
+      cursor: pointer; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 5px;
+    }
+    .open-button span { font-size: 14px; }
+
+
+    /* Lift when opened */
+    .letter { transition: transform .6s cubic-bezier(.3,.7,.3,1); }
+    .envelope-scene { transition: transform .6s cubic-bezier(.3,.7,.3,1); }
+    .envelope-scene.lift { transform: translateX(-50%) translateY(-18px); }
+    .envelope-scene.lift .letter { animation: none; transform: translateY(-11%); }
+    .page { transition: opacity .35s ease .45s; }
+    .page.leaving { opacity: 0; }
+
+    @media (max-width: 380px) {
+      .letter { padding-top: 25px; }
+      .letter h1 { font-size: 28px; }
+      .letter p { font-size: 19px; }
+      .stamp { font-size: 12px; padding: 7px 10px; }
+      .open-button { width: 76px; height: 76px; flex-basis: 76px; }
+      .dots { gap: 6px; padding-left: 10%; }
+    }
+    @media (max-height: 650px) {
+      .envelope-scene { top: 14%; height: 46%; }
+      .tap-text { top: 68%; }
+      .open-bar { height: 13%; }
+      .open-button { width: min(82px, 10vh); height: min(82px, 10vh); flex-basis: min(82px, 10vh); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .floating-heart, .raindrop, .top-heart, .letter, .envelope-heart { animation: none; }
+    }
+  </style>
+  <script src="music.js"></script>
+</head>
+<body>
+  <main class="page" id="page">
+    <div class="rain-layer" id="rainLayer" aria-hidden="true"></div>
+    <div class="heart-layer" id="heartLayer" aria-hidden="true"></div>
+    <div class="top-heart" aria-hidden="true">💜</div>
+
+    <section class="envelope-scene" aria-label="Princess Day letter in an envelope">
+      <article class="letter">
+        <h1>Hey You!</h1>
+        <p>I made a little something<br>just for you...</p>
+        <p>happy princess day ✿</p>
+      </article>
+      <div class="envelope-pocket"></div>
+      <div class="envelope-outline"></div>
+      <div class="stamp">PRINCESS DAY</div>
+      <div class="envelope-heart" aria-hidden="true">💗</div>
+      <div class="panda-slot" id="pandaSlot" aria-label="Reserved space for your panda PNG">
+        <!-- Add your panda image here later:
+             <img src="YOUR_PANDA_PNG_LINK" alt="Cute panda"> -->
+      </div>
+    </section>
+
+    <p class="tap-text">TAP ANYWHERE TO BEGIN</p>
+
+    <div class="open-bar">
+      <div class="dots" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <button class="open-button" id="openButton" type="button">Open<span aria-hidden="true">✉</span></button>
+    </div>
+  </main>
+
+  <script>
+    const heartLayer = document.getElementById("heartLayer");
+    const heartEmojis = ["💜", "🩷", "💗", "💖", "💕", "💞", "💓", "💘"];
+    const heartSettings = [
+      [7,26,0,18],[19,22,2.2,22],[31,26,4.6,17],[43,21,1.1,24],
+      [56,28,5.8,19],[68,23,3.4,21],[81,26,6.5,18],[93,21,2.8,23],
+      [13,20,7.2,20],[37,25,8.4,17],[62,21,9.1,22],[87,25,10.3,19],
+      [25,23,11.2,21],[49,26,12.4,18],[73,22,13.1,22],[97,24,14.2,20],
+      [3,22,1.7,19],[15,26,5.1,23],[28,20,9.6,18],[40,24,13.4,21],
+      [52,21,3.0,22],[65,27,7.7,17],[77,22,11.8,20],[90,26,0.9,24]
+    ];
+    heartSettings.forEach(([left,size,delay,duration], index) => {
+      const el = document.createElement("span");
+      el.className = "floating-heart";
+      el.textContent = heartEmojis[index % heartEmojis.length];
+      el.style.setProperty("--left", left + "%");
+      el.style.setProperty("--size", size + "px");
+      el.style.setProperty("--delay", (-delay) + "s");
+      el.style.setProperty("--duration", duration + "s");
+      el.style.setProperty("--blink-delay", (index * .37) + "s");
+      heartLayer.appendChild(el);
+    });
+
+    const rainLayer = document.getElementById("rainLayer");
+    for (let i = 0; i < 44; i++) {
+      const drop = document.createElement("span");
+      drop.className = "raindrop";
+      drop.style.setProperty("--left", ((i * 37 + 11) % 100) + "%");
+      drop.style.setProperty("--length", (12 + (i % 5) * 4) + "px");
+      drop.style.setProperty("--duration", (5.8 + (i % 7) * .55) + "s");
+      drop.style.setProperty("--delay", (-((i * 1.13) % 9)) + "s");
+      rainLayer.appendChild(drop);
+    }
+
+    // Page 3 file name (keep all pages in the same folder)
+    const NEXT_PAGE_URL = "page3.html";
+    let opening = false;
+
+    function openLetter() {
+      if (opening) return;
+      if (window.PrincessMusic) window.PrincessMusic.startFromGesture();
+      opening = true;
+      document.querySelector(".envelope-scene").classList.add("lift");
+      document.getElementById("page").classList.add("leaving");
+      setTimeout(function () {
+        if (NEXT_PAGE_URL.trim()) window.location.href = NEXT_PAGE_URL.trim();
+        else opening = false;
+      }, 850);
+    }
+    document.getElementById("openButton").addEventListener("click", (event) => {
+      event.stopPropagation();
+      openLetter();
+    });
+    document.getElementById("page").addEventListener("click", (event) => {
+      if (event.target.id !== "openButton") openLetter();
+    });
+  </script>
+</body>
+</html>

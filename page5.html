@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5d8f2">
+<title>A Note For You - Princess Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="music.js"></script>
+<style>
+:root{--pink:#e879bd;--pink2:#f5a5d3;--purple:#8544ad;--ink:#68417e;--script:"Caveat","Segoe Script",cursive;--serif:"Fraunces",Georgia,serif;--sans:"Inter",system-ui,sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;min-height:100%;overflow-x:hidden}
+body{font-family:var(--sans);color:var(--ink);background:linear-gradient(125deg,#f8d8ec 0%,#eedcff 52%,#f7cce8 100%)}
+.bg{position:fixed;inset:0;z-index:-2;background:linear-gradient(125deg,#f8d8ec 0%,#eedcff 52%,#f7cce8 100%)}
+.rain,.hearts{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+.rain{z-index:-1}.hearts{z-index:0}
+.drop{position:absolute;top:-24px;left:var(--x);width:1px;height:var(--h);background:linear-gradient(to bottom,transparent,rgba(255,255,255,.72));opacity:.35;animation:rain var(--d) linear var(--delay) infinite}
+@keyframes rain{to{transform:translate3d(-12px,110svh,0)}}
+.heart{position:absolute;left:var(--x);bottom:-45px;font-size:var(--s);opacity:0;filter:drop-shadow(0 2px 5px #a55dbe22);animation:float var(--d) linear var(--delay) infinite,blink 2.8s ease-in-out var(--blink) infinite}
+@keyframes float{0%{transform:translateY(0) rotate(-8deg)}25%{transform:translate(12px,-25vh) rotate(5deg)}50%{transform:translate(-9px,-50vh) rotate(-5deg)}75%{transform:translate(10px,-75vh) rotate(7deg)}100%{transform:translate(-5px,-112vh) rotate(-4deg)}}
+@keyframes blink{0%,100%{opacity:.07}35%,65%{opacity:.78}50%{opacity:.95}}
+.content{position:relative;z-index:1;width:100%;min-height:100svh;padding:54px 0 142px;text-align:center;overflow-x:clip}
+.kicker{margin:0;color:#a65bc0;font:600 12px/1.2 var(--script);font-size:17px;letter-spacing:.08em}
+.kicker .flower{color:#a35bc8;margin:0 5px}
+h1{margin:3px 0 17px;color:#c23d99;font:700 clamp(27px,7.2vw,34px)/1.1 var(--serif);letter-spacing:-.02em}
+.photo-row{width:min(90vw,430px);height:154px;margin:0 auto 5px;display:flex;align-items:flex-start;justify-content:space-between;padding:0 5px;position:relative}
+.polaroid{position:relative;width:37%;height:143px;padding:6px 6px 17px;background:#fff;border:1px solid #ead8ee;box-shadow:0 5px 13px #8d5b9b35;transform:rotate(-7deg)}
+.polaroid.right{transform:rotate(7deg);margin-top:4px}
+.polaroid:before{content:"";position:absolute;z-index:2;top:-7px;left:50%;width:11px;height:17px;border-radius:8px;background:linear-gradient(135deg,#f58fc7,#c66ed0);transform:translateX(-50%) rotate(8deg);box-shadow:0 1px 3px #86508c55}
+.photo{width:100%;height:100%;display:block;object-fit:contain;background:linear-gradient(135deg,#f8e3f2,#e7d9f7);background-size:contain;background-position:center;background-repeat:no-repeat}
+.paper-wrap{width:min(91vw,430px);position:relative;margin:0 auto}
+.paper{position:relative;min-height:394px;padding:22px 17px 66px;text-align:left;background-color:#fffdfd;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 28px,#f0d8e8 29px,#f0d8e8 30px);border:1px solid #efd9ec;border-radius:3px;box-shadow:0 7px 18px #9664a51c}
+.note-line{min-height:30px;display:flex;align-items:center;white-space:pre-wrap;color:#76508d;font:500 18px/1.55 var(--script);letter-spacing:.1px}
+.note-line:first-child{font-size:17px}
+.note-line.signature{font-size:22px;color:#8e4db1}
+.note-editor{outline:none;min-height:150px;white-space:pre-wrap;color:#76508d;font:500 18px/30px var(--script);letter-spacing:.1px}
+.note-editor:focus{outline:1px dashed #d69bd1;outline-offset:3px}
+.third-photo{position:absolute;z-index:2;right:-2px;bottom:-29px;width:37%;height:150px;padding:6px 6px 17px;background:#fff;border:1px solid #ead8ee;box-shadow:0 5px 13px #8d5b9b35;transform:rotate(-6deg)}
+.third-photo:before{content:"";position:absolute;top:-7px;left:50%;width:11px;height:17px;border-radius:8px;background:linear-gradient(135deg,#f58fc7,#c66ed0);transform:translateX(-50%) rotate(-8deg)}
+.greeting{display:inline-flex;align-items:center;justify-content:center;margin:43px auto 0;min-height:40px;padding:0 21px;border-radius:999px;background:linear-gradient(100deg,#f58ac2,#b86bd1);box-shadow:0 5px 14px #c58bc45c;color:#fff;font:600 11px var(--sans);text-decoration:none}
+.nav{position:fixed;z-index:10;left:50%;bottom:max(11px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(88vw,390px);height:68px;padding:7px 13px;display:flex;align-items:center;justify-content:space-between;border:1px solid #fff;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);border-radius:50px;box-shadow:0 5px 22px #a978b62b}
+.back{width:54px;height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:50%;background:#fff;color:#a15bc1;text-decoration:none;font:600 10px var(--sans);box-shadow:0 2px 9px #a978b622}
+.back .arrow{font-size:15px;line-height:1}
+.dots{display:flex;align-items:center;gap:6px;margin:0 auto}
+.dot{width:6px;height:6px;border-radius:50%;background:#edb5db}
+.dot.done{background:#d47bc8}.dot.active{width:9px;height:9px;background:#b968ce;box-shadow:0 0 0 3px #edc7e9}
+@media(min-width:520px){.content{padding-top:65px}.photo-row{height:180px}.polaroid{height:165px}.polaroid.right{margin-top:5px}.paper{min-height:420px;padding:27px 23px 72px}.note-line{font-size:20px}.third-photo{height:165px}}
+@media(prefers-reduced-motion:reduce){.heart,.drop{animation:none;opacity:.15}}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="rain" id="rain"></div><div class="hearts" id="hearts"></div>
+<main class="content">
+  <p class="kicker"><span class="flower">✿</span> one last thing <span class="flower">✿</span></p>
+  <h1>A Note For You</h1>
+  <section class="photo-row" aria-label="Two photographs">
+    <div class="polaroid"><div class="photo" id="photo1" role="img" aria-label="Photo one placeholder"></div></div>
+    <div class="polaroid right"><div class="photo" id="photo2" role="img" aria-label="Photo two placeholder"></div></div>
+  </section>
+  <section class="paper-wrap" aria-label="Personal note">
+    <article class="paper">
+      <div class="note-line" contenteditable="true" spellcheck="false">Hey Raj Nandini Bhagat,</div>
+      <div class="note-line" contenteditable="true" spellcheck="false">Happy Princess Day 😊 and Kal tumhara exam hai, so ache se dena. All the very best for your exam! ❤️
+
+Aur syllabus cover nahi hua bol rahe the na, toh bilkul darna mat. Don't take stress, paper easy hi aayega. Bas confidence ke saath jaana aur apna best dena.
+
+And lastly, Happy Princess Day! 👑✨
+Once again, All the best! 😘❤️</div>
+      <div class="note-line" aria-hidden="true"></div>
+      <div class="note-editor" contenteditable="true" spellcheck="false">still yours,
+Vignesh</div>
+    </article>
+    <div class="third-photo"><div class="photo" id="photo3" role="img" aria-label="Photo three placeholder"></div></div>
+  </section>
+  <div class="greeting" aria-label="Happy Princess Day">Happy Princess Day ♥</div>
+</main>
+<nav class="nav" aria-label="Page navigation">
+  <a class="back" href="page4.html"><span class="arrow">←</span><span>Back</span></a>
+  <div class="dots" aria-label="Page 5 of 5">
+    <span class="dot done"></span><span class="dot done"></span><span class="dot done"></span><span class="dot done"></span><span class="dot active"></span>
+  </div>
+</nav>
+<script>
+/* EDIT THESE THREE URLS to add your own photos. Keep them empty until ready. */
+const PHOTO_1_URL = "./iiage/nandini1.jpg";
+const PHOTO_2_URL = "./iiage/nandini2.jpg";
+const PHOTO_3_URL = "./iiage/nandini3.jpg";
+[PHOTO_1_URL,PHOTO_2_URL,PHOTO_3_URL].forEach((url,i)=>{
+  if(url.trim()) document.getElementById("photo"+(i+1)).style.backgroundImage="url("+JSON.stringify(url.trim())+")";
+});
+/* Editable background animation density, matching the earlier pages. */
+const heartBox=document.getElementById("hearts"), rainBox=document.getElementById("rain");
+const heartEmojis=["💜","🩷","💗","💖","💕"];
+for(let i=0;i<17;i++){
+  const e=document.createElement("span");e.className="heart";e.textContent=heartEmojis[i%heartEmojis.length];
+  e.style.setProperty("--x",(Math.random()*100)+"%");e.style.setProperty("--s",(13+Math.random()*13)+"px");
+  e.style.setProperty("--d",(17+Math.random()*15)+"s");e.style.setProperty("--delay",(-Math.random()*28)+"s");
+  e.style.setProperty("--blink",(-Math.random()*3)+"s");heartBox.appendChild(e);
+}
+for(let i=0;i<24;i++){
+  const e=document.createElement("i");e.className="drop";e.style.setProperty("--x",(Math.random()*100)+"%");
+  e.style.setProperty("--h",(12+Math.random()*20)+"px");e.style.setProperty("--d",(5+Math.random()*5)+"s");
+  e.style.setProperty("--delay",(-Math.random()*10)+"s");rainBox.appendChild(e);
+}
+</script>
+</body>
+</html>
